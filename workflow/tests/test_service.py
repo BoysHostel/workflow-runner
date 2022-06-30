@@ -1,7 +1,5 @@
 import os
-
 import emoji as emoji
-
 from .test_base import TestBase
 from Service.runner import json_reader, json_printer
 
