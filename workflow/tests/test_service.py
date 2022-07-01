@@ -1,13 +1,10 @@
 import os
-
 import emoji as emoji
-
 from .test_base import TestBase
 from Service.runner import json_reader, json_printer
 
 
 class Service(TestBase):
-
     def test_json_reader(self):
         print(emoji.emojize("Start Testing for json_reader :snowflake:"))
         json_reader(os.getcwd() + "/tests/mock/mock_data.json")
