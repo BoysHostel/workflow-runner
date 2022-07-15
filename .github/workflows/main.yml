@@ -17,8 +17,8 @@ jobs:
                     python-version: '3.9'
             - name: Install dependencies
               run: |
-                    echo "${GITHUB_HEAD_REF}"
-                    file=$(git diff upstream/main origin/${GITHUB_HEAD_REF} --name-only origin/main origin/${GITHUB_HEAD_REF} | cut -d'/' -f1 | uniq )
+                    echo "${HEAD}"
+                    file=$(git diff upstream/main origin/${HEAD} --name-only origin/main origin/${GITHUB_HEAD_REF} | cut -d'/' -f1 | uniq )
                     echo "TEST ... $file"
                     IFS=$'\n' read -d "" -r -a services <<< "$file"
                     echo "$PWD"
