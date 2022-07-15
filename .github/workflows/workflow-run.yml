@@ -25,7 +25,7 @@ jobs:
               run: |
                     file=$(git diff HEAD^..HEAD --name-only | cut -d'/' -f1 | uniq )
                     readarray -t services <<< "$file"
-                    echo $"{services[@]}"
+                    echo "${services[@]}"
                     PWD="$(pwd)"
                     for service in "${services[@]}"
                     do
