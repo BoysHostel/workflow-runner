@@ -21,13 +21,6 @@ jobs:
                     file=$(git diff --name-only | cut -d'/' -f1 | uniq )
                     IFS=$'\n' read -d "" -r -a services <<< "$file"
                     PWD="$(pwd)"
-                    BO="/businessobject:"
-                    EX_PATH=$PYTHONPATH:$PWD$BO
-                    COLON=":"
-                    TEST_COVERAGE=90
-                    rm -rf lib
-                    mkdir lib
-                    cp -rf base lib
             - name: Test with nosetests
               run: |
                     for service in "${services[@]}"
@@ -35,7 +28,6 @@ jobs:
                         case "$service" in
                             "workflow")
                                 cd $service
-                                export PYTHONPATH=$EX_PATH$PWD$COLON$service
                                 if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
                                 nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
                                 coverage=$(echo 'cat //coverage/@line-rate' | xmllint --shell coverage.xml | awk -F'[="]' '!/>/{print $(NF-1)}')
@@ -51,12 +43,10 @@ jobs:
                                 ;;
                             "workflow_1")
                                 cd $service
-                                export PYTHONPATH=$EX_PATH$PWD$COLON$service
                                 if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
                                 nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
                                 coverage=$(echo 'cat //coverage/@line-rate' | xmllint --shell coverage.xml | awk -F'[="]' '!/>/{print $(NF-1)}')
                                 coverage_percent=$(echo $coverage*100 | bc)
-                                i=90
                                 if($coverage_percent>=$TEST_COVERAGE)
                                 then
                                     echo "Above 90"
