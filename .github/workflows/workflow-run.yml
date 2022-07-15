@@ -73,7 +73,6 @@ jobs:
                         esac
                     done
             - name: Publish Test Results
-              uses: EnricoMi/publish-unit-test-result-action/composite@v1
-              if: always()
+              uses: ArtiomTr/jest-coverage-report-action@v2
               with:
-                files: "**/coverage.xml"
+                coverage-file: "**/coverage.xml"
