@@ -17,6 +17,8 @@ jobs:
                     python-version: '3.9'
             - name: Install dependencies
               run: |
+                    apt update
+                    apt -y install libxml2-utils
                     python -m pip install --upgrade pip
                     pip install nose
                     pip install coverage
@@ -24,7 +26,7 @@ jobs:
               run: |
                     file=$(git diff HEAD^..HEAD --name-only | cut -d'/' -f1 | uniq )
                     readarray -t services <<< "$file"
-                    echo $services
+                    echo $"{services[@]}"
                     PWD="$(pwd)"
                     for service in "${services[@]}"
                     do
