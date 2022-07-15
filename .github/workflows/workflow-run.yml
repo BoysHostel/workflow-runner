@@ -54,7 +54,7 @@ jobs:
                                 coverage_percent=$(echo $coverage*100 | bc)
                                 echo $TEST_COVERAGE
                                 echo $coverage_percent
-                                if [ $coverage_percent > $TEST_COVERAGE ]
+                                if [ $coverage_percent -ge $TEST_COVERAGE ]
                                 then
                                     echo "Above 90"
                                 else
