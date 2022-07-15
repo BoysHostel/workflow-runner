@@ -75,4 +75,4 @@ jobs:
             - name: Publish Test Results
               uses: ArtiomTr/jest-coverage-report-action@v2
               with:
-                coverage-file: "**/coverage.xml"
+                coverage-file: "*/coverage.xml"
