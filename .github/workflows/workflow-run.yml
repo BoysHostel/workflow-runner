@@ -28,19 +28,15 @@ jobs:
                     rm -rf lib
                     mkdir lib
                     cp -rf base lib
-#                    cd base
-#                    if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-#                    cd businessobject
-#                    if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             - name: Test with nosetests
               run: |
                     for service in "${services[@]}"
                     do
                         case "$service" in
-                            "process")
+                            "workflow")
                                 cd $service
                                 export PYTHONPATH=$EX_PATH$PWD$COLON$service
-#                                if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+                                if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
                                 nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
                                 coverage=$(echo 'cat //coverage/@line-rate' | xmllint --shell coverage.xml | awk -F'[="]' '!/>/{print $(NF-1)}')
                                 coverage_percent=$(echo $coverage*100 | bc)
@@ -53,10 +49,10 @@ jobs:
                                 fi
                                 cd ..
                                 ;;
-                            "accounts")
+                            "workflow_1")
                                 cd $service
                                 export PYTHONPATH=$EX_PATH$PWD$COLON$service
-#                                if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+                                if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
                                 nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
                                 coverage=$(echo 'cat //coverage/@line-rate' | xmllint --shell coverage.xml | awk -F'[="]' '!/>/{print $(NF-1)}')
                                 coverage_percent=$(echo $coverage*100 | bc)
