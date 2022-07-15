@@ -5,7 +5,7 @@ on:
     pull_request:
         branches: [ "main" ]
 jobs:
-    build:
+    Test-Case-Backend:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
@@ -15,13 +15,62 @@ jobs:
                     python-version: '3.9'
             - name: Install dependencies
               run: |
-                    echo "$PWD"
                     python -m pip install --upgrade pip
                     pip install nose
                     pip install coverage
-                    pip install emoji
-                    if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+                    file=$(git diff --name-only | cut -d'/' -f1 | uniq )
+                    IFS=$'\n' read -d "" -r -a services <<< "$file"
+                    PWD="$(pwd)"
+                    BO="/businessobject:"
+                    EX_PATH=$PYTHONPATH:$PWD$BO
+                    COLON=":"
+                    TEST_COVERAGE=90
+                    rm -rf lib
+                    mkdir lib
+                    cp -rf base lib
+#                    cd base
+#                    if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+#                    cd businessobject
+#                    if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             - name: Test with nosetests
               run: |
-                        cd workflow
-                        nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
+                    for service in "${services[@]}"
+                    do
+                        case "$service" in
+                            "process")
+                                cd $service
+                                export PYTHONPATH=$EX_PATH$PWD$COLON$service
+#                                if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+                                nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
+                                coverage=$(echo 'cat //coverage/@line-rate' | xmllint --shell coverage.xml | awk -F'[="]' '!/>/{print $(NF-1)}')
+                                coverage_percent=$(echo $coverage*100 | bc)
+                                if($coverage_percent>=$TEST_COVERAGE)
+                                then
+                                    echo "$service Unit test coverage $coverage_percent %"
+                                else
+                                    echo "Unit test coverage covered only $coverage_percent %"
+                                    exit 1
+                                fi
+                                cd ..
+                                ;;
+                            "accounts")
+                                cd $service
+                                export PYTHONPATH=$EX_PATH$PWD$COLON$service
+#                                if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+                                nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
+                                coverage=$(echo 'cat //coverage/@line-rate' | xmllint --shell coverage.xml | awk -F'[="]' '!/>/{print $(NF-1)}')
+                                coverage_percent=$(echo $coverage*100 | bc)
+                                i=90
+                                if($coverage_percent>=$TEST_COVERAGE)
+                                then
+                                    echo "Above 90"
+                                else
+                                    echo "Unit test coverage covered only $coverage_percent %"
+                                    exit 1
+                                fi
+                                cd ..
+                                ;;
+                            *)
+                                echo "Testcase Action not implemented for {$service}"
+                        esac
+                    done
