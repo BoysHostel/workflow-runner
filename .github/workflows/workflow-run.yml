@@ -6,6 +6,11 @@ on:
         branches: [ "main" ]
 jobs:
     run-test-cases:
+        permissions:
+            contents: read
+            issues: read
+            checks: write
+            pull-requests: write
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
@@ -67,3 +72,8 @@ jobs:
                                 echo "Testcase Action not implemented for {$service}"
                         esac
                     done
+            - name: Publish Test Results
+              uses: EnricoMi/publish-unit-test-result-action/composite@v1
+              if: always()
+              with:
+                files: "**/coverage.xml"
