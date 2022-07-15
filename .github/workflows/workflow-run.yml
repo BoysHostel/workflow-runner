@@ -15,11 +15,6 @@ jobs:
               uses: actions/setup-python@v3
               with:
                     python-version: '3.9'
-            - name: Lint
-              uses: ChristophWurst/xmllint-action@v1
-              with:
-                    xml-file: ./appinfo/info.xml
-                    xml-schema-file: ./info.xsd
             - name: Install dependencies
               run: |
                     python -m pip install --upgrade pip
