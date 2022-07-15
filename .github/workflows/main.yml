@@ -20,7 +20,7 @@ jobs:
                     echo "${HEAD}"
                     file=$(git diff HEAD^..HEAD --name-only | cut -d'/' -f1 | uniq )
                     echo "TEST ... $file"
-                    IFS=$'\n' read -d "" -r -a services <<< "$file"
+                    readarray -t services <<< "$file"
                     echo "$PWD"
                     python -m pip install --upgrade pip
                     pip install nose
