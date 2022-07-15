@@ -19,7 +19,8 @@ jobs:
                     pip install nose
                     pip install coverage
                     file=$(git diff --name-only | cut -d'/' -f1 | uniq )
-                    IFS=$'\n' read -d "" -r -a services <<< "$file"
+                    readarray -t services <<< "$file"
+                    echo $services
                     PWD="$(pwd)"
             - name: Test with nosetests
               run: |
