@@ -18,7 +18,7 @@ jobs:
             - name: Install dependencies
               run: |
                     echo "${HEAD}"
-                    file=$(git diff origin/main origin/${HEAD} --name-only | cut -d'/' -f1 | uniq )
+                    file=$(git diff HEAD^..HEAD --name-only | cut -d'/' -f1 | uniq )
                     echo "TEST ... $file"
                     IFS=$'\n' read -d "" -r -a services <<< "$file"
                     echo "$PWD"
