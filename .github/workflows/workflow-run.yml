@@ -72,7 +72,3 @@ jobs:
                                 echo "Testcase Action not implemented for {$service}"
                         esac
                     done
-            - name: Publish Test Results
-              uses: ArtiomTr/jest-coverage-report-action@v2
-              with:
-                coverage-file: "workflow_1/coverage.xml"
