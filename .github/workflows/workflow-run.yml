@@ -73,6 +73,6 @@ jobs:
                         esac
                     done
             - name: Pytest coverage comment
-              uses: MishaKav/pytest-coverage-comment@main
+              uses: xportation/pytest-coverage-comment@main
               with:
                   junitxml-path: ./coverage.xml
