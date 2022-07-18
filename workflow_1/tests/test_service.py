@@ -15,3 +15,7 @@ class Service(TestBase):
         data = json_reader(os.getcwd() + "/tests/mock/mock_data.json")
         json_printer(data)
         print(emoji.emojize('json_printer Test :thumbs_up:'))
+     
+    def test_3(self):
+        assert 2+3==6
+        
