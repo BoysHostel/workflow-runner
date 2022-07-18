@@ -24,7 +24,7 @@ jobs:
               run: |
                     python -m pip install --upgrade pip
                     sudo apt-get install libxml2-utils
-                    pip install nose
+                    pip install pytest
                     pip install coverage
             - name: Test with nosetests
               run: |
@@ -39,19 +39,13 @@ jobs:
                             "workflow")
                                 cd $service
                                 if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-                                nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
-                                coverage=$(echo 'cat //coverage/@line-rate' | xmllint --shell coverage.xml | awk -F'[="]' '!/>/{print $(NF-1)}')
-                                coverage_percent=$(echo $coverage*100 | bc)
+                                pytest --junitxml=pytest.xml | tee pytest-coverage.txt
                                 cd ..
                                 ;;
                             "workflow_1")
                                 cd $service
                                 if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-                                nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
-                                coverage=$(echo 'cat //coverage/@line-rate' | xmllint --shell coverage.xml | awk -F'[="]' '!/>/{print $(NF-1)}')
-                                coverage_percent=$(echo $coverage*100 | bc)
-                                echo $TEST_COVERAGE
-                                echo $coverage_percent
+                                pytest --junitxml=pytest.xml | tee pytest-coverage.txt
                                 cd ..
                                 ;;
                             *)
@@ -61,4 +55,6 @@ jobs:
             - name: Pytest coverage comment
               uses: xportation/pytest-coverage-comment@main
               with:
-                  junitxml-path: ./workflow/coverage.xml
+                multiple-files: |
+                  Workflow -1, ./workflow/pytest-coverage.txt, ./workflow/pytest.xml
+                  Workflow -2, ./workflow_1/pytest-coverage.txt, ./workflow_1/pytest.xml
