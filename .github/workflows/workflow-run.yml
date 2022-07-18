@@ -6,22 +6,69 @@ on:
         branches: [ "main" ]
 jobs:
     run-test-cases:
+        permissions:
+            contents: read
+            issues: read
+            checks: write
+            pull-requests: write
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
+              with:
+                    fetch-depth: 0
             - name: Set up Python 3.9
               uses: actions/setup-python@v3
               with:
                     python-version: '3.9'
             - name: Install dependencies
               run: |
-                    echo "$PWD"
                     python -m pip install --upgrade pip
+                    sudo apt-get install libxml2-utils
                     pip install nose
                     pip install coverage
-                    pip install emoji
-                    if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             - name: Test with nosetests
               run: |
-                        cd workflow
-                        nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
+                    file=$(git diff HEAD^..HEAD --name-only | cut -d'/' -f1 | uniq )
+                    readarray -t services <<< "$file"
+                    echo "${services[@]}"
+                    PWD="$(pwd)"
+                    TEST_COVERAGE=90
+                    for service in "${services[@]}"
+                    do
+                        case "$service" in
+                            "workflow")
+                                cd $service
+                                if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+                                nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
+                                coverage=$(echo 'cat //coverage/@line-rate' | xmllint --shell coverage.xml | awk -F'[="]' '!/>/{print $(NF-1)}')
+                                coverage_percent=$(echo $coverage*100 | bc)
+                                if [ $coverage_percent -ge $TEST_COVERAGE ]
+                                then
+                                    echo "$service Unit test coverage $coverage_percent %"
+                                else
+                                    echo "Unit test coverage covered only $coverage_percent %"
+                                    exit 1
+                                fi
+                                cd ..
+                                ;;
+                            "workflow_1")
+                                cd $service
+                                if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+                                nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
+                                coverage=$(echo 'cat //coverage/@line-rate' | xmllint --shell coverage.xml | awk -F'[="]' '!/>/{print $(NF-1)}')
+                                coverage_percent=$(echo $coverage*100 | bc)
+                                echo $TEST_COVERAGE
+                                echo $coverage_percent
+                                if [ $coverage_percent -ge $TEST_COVERAGE ]
+                                then
+                                    echo "Above 90"
+                                else
+                                    echo "Unit test coverage covered only $coverage_percent %"
+                                    exit 1
+                                fi
+                                cd ..
+                                ;;
+                            *)
+                                echo "Testcase Action not implemented for {$service}"
+                        esac
+                    done

@@ -1,0 +1,5 @@
+[report]
+omit =
+    main.py
+precision = 2
+show_missing=True
