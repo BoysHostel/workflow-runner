@@ -39,22 +39,37 @@ jobs:
                             "workflow")
                                 cd $service
                                 if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-                                pytest --junitxml=pytest.xml | tee pytest-coverage.txt
+                                nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
+                                report=$(python3 -m coverage report -m)
+                                curl --request POST \
+                                --url https://api.github.com/repos/${{ github.repository }}/issues \
+                                --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                                --header 'content-type: application/json' \
+                                --data '{
+                                "title": "Test Case Report for $service",
+                                "body": "$report"
+                                }' \
+                                --fail
                                 cd ..
                                 ;;
                             "workflow_1")
                                 cd $service
                                 if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-                                pytest --junitxml=pytest.xml | tee pytest-coverage.txt
+                                nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml
+                                report=$(python3 -m coverage report -m)
+                                curl --request POST \
+                                --url https://api.github.com/repos/${{ github.event.pull_request.head.repo.owner.login }}/${{ github.repository }}/pulls/${{ github.event.number }}/reviews \
+                                --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                                --header 'content-type: application/json' \
+                                --data '{
+                                "title": "Test Case Report for $service",
+                                "body": "$report"
+                                }' \
+                                --fail
+
                                 cd ..
                                 ;;
                             *)
                                 echo "Testcase Action not implemented for {$service}"
                         esac
                     done
-            - name: Pytest coverage comment
-              uses: xportation/pytest-coverage-comment@main
-              with:
-                multiple-files: |
-                  Workflow -1, ./workflow/pytest-coverage.txt, ./workflow/pytest.xml
-                  Workflow -2, ./workflow_1/pytest-coverage.txt, ./workflow_1/pytest.xml
