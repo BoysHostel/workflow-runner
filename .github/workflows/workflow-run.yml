@@ -48,14 +48,7 @@ jobs:
                                 latest_commit_sha=$(echo "$latest_commit" | jq -r '.sha')
                                 echo "$latest_commit_sha"
                                 echo "$secrets.GITHUB_TOKEN"
-                                curl --request POST \
-                                --url https://api.github.com/repos/${{ github.repository }}/commits/$latest_commit_sha/comments \
-                                --header 'authorization: token ${{ secrets.GITHUB_TOKEN }}' \
-                                --header 'content-type: application/json' \
-                                --data '{
-                                "body": "<table><thead><tr><td>Total Lines</td><td>Covered</td><td>Coverage</td></tr></thead><tbody><tr><td>$total</td><td>$covered</td><td>$coverage_percent %</td></tr></tbody></table>"
-                                }' \
-                                --fail
+                                curl --request POST --url https://api.github.com/repos/${{ github.repository }}/commits/${{ latest_commit_sha }}/comments --header 'authorization: token ${{ secrets.GITHUB_TOKEN }}' --header 'content-type: application/json' --data '{"body": "<table><thead><tr><td>Total Lines</td><td>Covered</td><td>Coverage</td></tr></thead><tbody><tr><td>$total</td><td>$covered</td><td>$coverage_percent %</td></tr></tbody></table>"}' --fail
                                 cd ..
                                 ;;
                             "workflow_1")
