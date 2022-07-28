@@ -40,7 +40,7 @@ jobs:
                                 coverage_percent=$(echo $coverage*100 | bc)
                                 total=$(echo 'cat //coverage/@lines-valid' | xmllint --shell coverage.xml | awk -F'[="]' '!/>/{print $(NF-1)}')
                                 covered=$(echo 'cat //coverage/@lines-covered' | xmllint --shell coverage.xml | awk -F'[="]' '!/>/{print $(NF-1)}')
-                                curl --request POST --url https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }}/comments --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' --header 'content-type: application/json' --data '{"body": "<table><thead><tr><td>Total Lines</td><td>Covered</td><td>Coverage</td></tr></thead><tbody><tr><td>${{ total }}</td><td>${{ covered }}</td><td>${{ coverage_percent }} %</td></tr></tbody></table>"}' --fail
+                                curl --request POST --url https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }}/comments --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' --header 'content-type: application/json' --data '{"body": "<table><thead><tr><td>Total Lines</td><td>Covered</td><td>Coverage</td></tr></thead><tbody><tr><td> $total </td><td> $covered </td><td> $coverage_percent %</td></tr></tbody></table>"}' --fail
                                 cd ..
                                 ;;
                             "workflow_1")
