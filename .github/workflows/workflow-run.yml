@@ -24,11 +24,6 @@ jobs:
                     pip install coverage
             - name: UNIT TEST REPO
               uses: Nikson-A/unit-test-action@main
-              with:
-                github-token: $GITHUB_TOKEN
-                github-api-domain: $GITHUB_API_URL
-                github-repo: $GITHUB_ACTION_REPOSITORY
-                commit-id: ${{ github.event.pull_request.head.sha }}
             - name: Test with nosetests
               run: |
                     file=$(git diff HEAD^..HEAD --name-only | cut -d'/' -f1 | uniq )
