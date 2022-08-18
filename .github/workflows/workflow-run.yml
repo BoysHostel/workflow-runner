@@ -61,3 +61,8 @@ jobs:
                     done
             - name: UNIT TEST REPO
               uses: Nikson-A/unit-test-action@main
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  github-api-domain: https://api.github.com
+                  github-repo: ${{ github.event.repository.name }}
+                  commit-id: ${{ github.event.pull_request.head.sha }}
