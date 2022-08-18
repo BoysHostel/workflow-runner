@@ -64,5 +64,5 @@ jobs:
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   github-api-domain: https://api.github.com
-                  github-repo: ${{ github.event.repository.name }}
+                  github-repo: $GITHUB_ACTION_REPOSITORY
                   commit-id: ${{ github.event.pull_request.head.sha }}
