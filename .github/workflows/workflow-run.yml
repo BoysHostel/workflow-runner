@@ -30,7 +30,7 @@ jobs:
                     readarray -t services <<< "$file"
                     echo "${services[@]}"
                     PWD="$(pwd)"
-                    TEST_COVERAGE=95
+                    TEST_COVERAGE=90
                     for service in "${services[@]}"
                     do
                         case "$service" in
