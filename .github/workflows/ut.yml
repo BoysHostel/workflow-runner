@@ -1,0 +1,25 @@
+name: Workflow Runner
+on: 
+    push:
+        branches: [ "main" ]
+    pull_request:
+        branches: [ "main" ]
+permissions: write-all
+jobs:
+    run-test-cases:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                    fetch-depth: 0
+            - name: Set up Python 3.9
+              uses: actions/setup-python@v3
+              with:
+                    python-version: '3.9'
+            - name: UNIT TEST REPO
+              uses: Nikson-A/unit-test-action@main
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  github-api-domain: https://api.github.com
+                  github-repo: $GITHUB_ACTION_REPOSITORY
+                  commit-id: ${{ github.event.pull_request.head.sha }}
