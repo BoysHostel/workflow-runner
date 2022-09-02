@@ -59,10 +59,3 @@ jobs:
                                 echo "Testcase Action not implemented for {$service}"
                         esac
                     done
-            - name: UNIT TEST REPO
-              uses: Nikson-A/unit-test-action@main
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  github-api-domain: https://api.github.com
-                  github-repo: $GITHUB_ACTION_REPOSITORY
-                  commit-id: ${{ github.event.pull_request.head.sha }}
