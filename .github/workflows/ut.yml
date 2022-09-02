@@ -23,4 +23,4 @@ jobs:
                   github_repository: $GITHUB_ACTION_REPOSITORY
                   commit_id: ${{ github.event.pull_request.head.sha }}
                   expect_coverage: 90
-                  
+                  test_action: "[{\"path\": \"workflow-runnner/workflow\", \"command\": \"nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml\", \"env\": \"\"}]"
