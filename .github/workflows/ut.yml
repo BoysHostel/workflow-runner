@@ -23,11 +23,5 @@ jobs:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   github_repository: ${{ github.repository }}
                   commit_id: ${{ github.event.pull_request.head.sha }}
-                  expect_coverage: 97
-                  test_action: "[{\"path\": \"workflow-runnner/workflow\", \"command\": \"nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml\", \"env\": \"\"}]"
-              with:
-                  github_api_domain: "https://api.github.com"
-                  github_repository: $GITHUB_ACTION_REPOSITORY
-                  commit_id: ${{ github.event.pull_request.head.sha }}
                   expect_coverage: 90
-                  test_action: "[{\"path\": \"workflow-runnner/workflow\", \"command\": \"nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml\", \"env\": \"\"}]"
+                  ut_conf: "[{\"path\": \"workflow\", \"command\": \"nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml\", \"python_path\": \"\", \"requirement\": \"requirement.txt\"}, {\"path\": \"workflow_1\", \"command\": \"nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml\", \"python_path\": \"\", \"requirement\": \"requirement.txt\"}]"
