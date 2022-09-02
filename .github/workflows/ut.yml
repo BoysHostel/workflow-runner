@@ -24,4 +24,4 @@ jobs:
                   github_repository: ${{ github.repository }}
                   commit_id: ${{ github.event.pull_request.head.sha }}
                   expect_coverage: 90
-                  ut_conf: "[{\"path\": \"workflow\", \"command\": \"nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml\", \"python_path\": \"\", \"requirement\": \"requirement.txt\"}, {\"path\": \"workflow_1\", \"command\": \"nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml\", \"python_path\": \"\", \"requirement\": \"requirement.txt\"}]"
+                  ut_conf: "[{\"path\": \"workflow\", \"command\": \"nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml\", \"python_path\": \"\", \"requirement\": \"requirements.txt\"}, {\"path\": \"workflow_1\", \"command\": \"nosetests --with-coverage --cover-erase --cover-package=. --cover-tests --cover-xml\", \"python_path\": \"\", \"requirement\": \"requirements.txt\"}]"
