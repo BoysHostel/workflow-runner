@@ -1,0 +1,7 @@
+[{
+	"path": "workflow",
+	"requirement": "requirements.txt"
+}, {
+	"path": "workflow_1",
+	"requirement": "requirements.txt"
+}]
