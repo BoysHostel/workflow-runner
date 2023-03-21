@@ -17,7 +17,7 @@ jobs:
               with:
                     python-version: '3.9'
             - name: UNIT TEST REPO
-              uses: nikson-a/unit-test-action@nikson-changes
+              uses: nikson-a/unit-test-action@main
               env:
                   github_api_domain: "https://api.github.com"
                   github_token: ${{ secrets.GITHUB_TOKEN }}
